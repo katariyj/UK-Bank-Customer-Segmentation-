@@ -1,0 +1,156 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+UK_Banks = read.csv(file.choose())
+
+UK_Banks = as.data.frame(UK_Banks)
+
+head(UK_Banks)
+
+```
+```{r}
+tail(UK_Banks)
+```
+
+```{r}
+dim(UK_Banks)
+```
+
+```{r}
+names(UK_Banks)
+```
+
+
+```{r}
+summary(UK_Banks)
+```
+
+```{r}
+str(UK_Banks)
+```
+
+
+```{r}
+library(Amelia)
+missmap(UK_Banks, main = 'Missing Values in Dataset', col = c('yellow', 'black'), legend =F)
+
+```
+
+
+```{r}
+#install.packages('plotly')
+library(ggplot2)
+library(plotly)
+```
+```{r}
+library(RColorBrewer)
+REGION = factor(UK_Banks$Region)
+Region = ggplot(UK_Banks, aes(x = REGION)) + geom_bar(fill = brewer.pal(length(unique(REGION)), "Set1"), color = "black", alpha = 0.75) + xlab("Region") + ylab("Number of Customers") + ggtitle("Customers by Region") + theme_bw()
+Regionplot = ggplotly(Region)
+Regionplot
+
+
+```
+
+
+```{r}
+balance_hist = ggplot(UK_Banks, aes(UK_Banks$Balance)) + geom_histogram(binwidth = 10000, fill = "green", color = "black", alpha= 0.45)+ 
+  xlab("Bank Balance") + ylab("Number of Customers") + ggtitle("Histogram of Balance") +  theme_bw()
+balance_hist
+
+```
+
+
+```{r}
+balance_hist = ggplot(UK_Banks, aes(UK_Banks$Balance)) + geom_histogram(binwidth = 10000,color = "black", aes(fill = ..count..))+ 
+  xlab("Bank Balance") + ylab("Number of Customers") + ggtitle("Histogram of Balance") + theme_bw()
+balance_hist
+```
+
+```{r}
+age_hist = ggplot(UK_Banks, aes(UK_Banks$Age)) + geom_histogram(bins = 10, fill = "red", color = "black", alpha= 0.6)+ 
+  xlab("Age") + ylab("Number of Customers") +ggtitle("Histogram of Age")  + theme_bw()
+age_hist
+```
+
+
+```{r}
+age_hist = ggplot(UK_Banks, aes(UK_Banks$Age)) + geom_histogram(bins = 10, color = "black" ,aes(fill = ..count..))+ 
+  xlab("Age") + ylab("Number of Customers") +ggtitle("Histogram of Age") + theme_bw()
+age_hist
+```
+
+```{r}
+Job_hist = ggplot(UK_Banks, aes(UK_Banks$Job.Classification, Age)) + geom_boxplot(aes(fill=Job.Classification) ,color = "black", alpha= 0.75) +
+  xlab("Job Classification") + ylab("Age") +ggtitle("Age by Job Classification")+ theme_bw()
+Job_hist
+```
+
+
+ScatterPlot of AGE and Balance
+
+```{r}
+AgeandBalance = ggplot(UK_Banks, aes(x = Age, y = Balance)) + geom_point(aes(color=Region), alpha = 0.5) + ggtitle("Bank Balance and Age by Region")+ facet_grid(. ~ UK_Banks$Region) + theme_bw()
+
+AgeandBalance
+```
+
+```{r}
+REGION = factor(UK_Banks$Region)
+
+pl <- ggplot(UK_Banks, aes(Region, Age)) + 
+geom_boxplot(aes(group = UK_Banks$Region, fill = REGION), alpha = 0.75)
+
+pl2 <- pl + scale_y_continuous(breaks = seq(min(0), max(80), by =5)) + ggtitle("Age by Region")  + theme_bw()
+
+print(pl2)
+```
+
+```{r}
+pl <- ggplot(UK_Banks, aes(Region, Balance)) + 
+geom_boxplot(aes(group = UK_Banks$Region, fill = REGION), alpha = 0.75)
+
+pl2 <- pl + scale_y_continuous(breaks = seq(min(0), max(195000), by =20000)) + ggtitle("Bank Balance by Region") + theme_bw()
+
+print(pl2)
+```
+
+```{r}
+
+pl <- ggplot(UK_Banks, aes( Gender, Age)) + 
+geom_boxplot(aes(group = UK_Banks$Gender, fill = Gender), alpha = 0.75)
+
+pl2 <- pl + scale_y_continuous(breaks = seq(min(0), max(65), by =10)) +ggtitle("Age by Gender")  + theme_bw()
+
+print(pl2)
+```
+
+```{r}
+pl <- ggplot(UK_Banks, aes(y = Age, x = REGION, fill = Gender)) + geom_boxplot() +ggtitle("Gender and Age by Region") + theme_bw()
+pl
+```
+
+```{r}
+pl <- ggplot(UK_Banks, aes(x = REGION, fill = Job.Classification)) + geom_bar(color = "black") +xlab("Region") + ylab("Number of Customers") +ggtitle("Job Classification by Region") + theme_bw()
+pl
+```
+
+```{r}
+pl <- ggplot(UK_Banks, aes(x = REGION, fill = Gender)) + geom_bar(position = "fill", color = "black") +xlab("Region")+ ylab('Number of Customers') + ggtitle("Percentage of Gender by Region") + theme_bw()
+pl
+```
+
+
+```{r}
+pl <- ggplot(UK_Banks, aes(x = REGION, fill = Job.Classification)) + geom_bar(position = "dodge", color="black") + xlab("Region")+ ylab('Number of Customers') + ggtitle("Job Classification by Region") + theme_bw()
+pl
+```
+
