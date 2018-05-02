@@ -1,2 +1,2 @@
 # UK-Bank-Customer-Segmentation-
-In Tableau
+In Tableau and R
